@@ -1,38 +1,44 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public string playerName = "Bob the Hero";
-    public int age = 25;
-    public int characterLevel = 80;
-    public float moveSpeed =2.5f;
-    public bool gameOver = true;
-
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
+   [SerializeField] private float moveSpeed = 3.5f;
+   [SerializeField] private float jumpForce = 3.5f;
+    private float xInput;
 
     private void Awake()
     {
-        GetPlayerInfo();
-    }
-
-    private void Start()
-    {
-
-        GetPlayerInfo();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        GetPlayerInfo()
+        HandleInput();
+        HandleMovement();
+
+
     }
 
-    private void GetPlayerInfo()
-    {
-        Debug.Log("Player Name: " + playerName);
-        Debug.Log("Age: " + age);
-        Debug.Log("Character Level: " + characterLevel);
-        Debug.Log("Move Speed: " + moveSpeed);
-        Debug.Log("Game Over: " + gameOver);
-    }
 
-}
+        private void HandleInput()
+        {
+            xInput= Input.GetAxisRaw("Horizontal");
+            if (Input.GetKeyDown(KeyCode.Space))
+                Jump();
+    }
+        
+
+        private void HandleMovement()
+        {
+            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        }
+
+        private void Jump()
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+ }
+
+  

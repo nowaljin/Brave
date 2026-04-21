@@ -349,10 +349,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 676931264}
+  - component: {fileID: 676931260}
   - component: {fileID: 676931263}
   - component: {fileID: 676931262}
   - component: {fileID: 676931261}
-  - component: {fileID: 676931260}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -372,6 +372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb38920ad090664eb456ef4d3530131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 3.5
+  jumpForce: 8
 --- !u!58 &676931261
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -423,8 +425,8 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 5
-  m_Material: {fileID: 6200000, guid: c25a9abe539a44d45b7ad29bb9adb61e, type: 2}
+  m_GravityScale: 1.5
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -606,9 +608,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 2
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -620,7 +622,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 3
 --- !u!61 &1023179641
 BoxCollider2D:
   m_ObjectHideFlags: 0
