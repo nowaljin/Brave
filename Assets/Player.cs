@@ -1,19 +1,17 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-   private Animator anim;
-   private Rigidbody2D rb;
-   [Header("Movement details")]
-   [SerializeField] private float moveSpeed = 3.5f;
-   [SerializeField] private float jumpForce = 8f;
+    private Animator anim;
+    private Rigidbody2D rb;
+    [Header("Movement details")]
+    [SerializeField] private float moveSpeed = 3.5f;
+    [SerializeField] private float jumpForce = 8f;
     private float xInput;
     private bool facingRight = true;
 
     [Header("Collision details")]
-    [SerializeField] private float groundCheckDistance ;
+    [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask whatIsGrounded;
     private bool isGrounded;
 
@@ -39,40 +37,40 @@ public class Player : MonoBehaviour
 
     }
 
-    
+
 
     private void HandleAnimations()
     {
-        bool isMoving = rb.linearVelocity.x != 0;
-
-        anim.SetBool("isMoving", isMoving);
+        anim.SetFloat("xVelocity", rb.linearVelocity.x);
+        anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        anim.SetBool("isGrounded", isGrounded);
 
     }
 
     private void HandleInput()
-        {
-            xInput= Input.GetAxisRaw("Horizontal");
+    {
+        xInput = Input.GetAxisRaw("Horizontal");
 
 
-            if (Input.GetKeyDown(KeyCode.Space))
-                Jump();
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
     }
-        
 
-        private void HandleMovement()
-        {
-            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
-        }
 
-        private void Jump()
-        {
+    private void HandleMovement()
+    {
+        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+    private void Jump()
+    {
         if (isGrounded)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
+    }
 
     private void HandleCollision()
     {
-        
+
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGrounded);
     }
 
@@ -84,7 +82,7 @@ public class Player : MonoBehaviour
             Flip();
     }
 
-    private void Flip() 
+    private void Flip()
     {
         transform.Rotate(0, 180, 0);
         facingRight = !facingRight;
@@ -92,9 +90,9 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0,-groundCheckDistance));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
     }
 
 }
 
-  
+
