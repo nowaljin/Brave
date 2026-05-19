@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 8f;
     private float xInput;
     private bool facingRight = true;
+    private bool canMove = true;
+    private bool canJump= true;
 
     [Header("Collision details")]
     [SerializeField] private float groundCheckDistance;
@@ -37,6 +39,14 @@ public class Player : MonoBehaviour
 
     }
 
+    public void EnableMovementAndJump(bool enable)
+    { 
+        canMove  = enable;
+        canJump = enable;
+
+    
+    }
+
 
 
     private void HandleAnimations()
@@ -53,19 +63,36 @@ public class Player : MonoBehaviour
 
 
         if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
+            TryToJump();
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        
+            TryToAttack();
+        
+
+    }
+    private void TryToAttack()
+    {
+        if (isGrounded)
+            anim.SetTrigger("attack");
+      
+        
     }
 
+  
+
+    private void TryToJump()
+    {
+        if (isGrounded && canJump)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+    }
 
     private void HandleMovement()
     {
-        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
-    }
-
-    private void Jump()
-    {
-        if (isGrounded)
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        if(canMove)
+            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        else
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
     }
 
     private void HandleCollision()
