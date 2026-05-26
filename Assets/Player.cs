@@ -1,9 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
+
+    
+    
+    [Header("Attack details")]
+    [SerializeField] private float attackRadius;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private LayerMask whatIsEnemy;
+
+
+
     [Header("Movement details")]
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float jumpForce = 8f;
@@ -16,16 +27,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask whatIsGrounded;
     private bool isGrounded;
-
-
-
-
-
+    
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+
+
+
     }
 
     private void Update()
@@ -36,6 +46,16 @@ public class Player : MonoBehaviour
         HandleAnimations();
         HandleFlip();
 
+
+    }
+    public void DamageEnemies()
+    {
+       Collider2D[] enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position,attackRadius,whatIsEnemy);
+
+        foreach (Collider2D enemy in enemyColliders)
+        {
+            enemy.GetComponent<Enemy>().TakeDamage();
+        }
 
     }
 
@@ -118,6 +138,7 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
     }
 
 }

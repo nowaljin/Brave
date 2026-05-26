@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAnimationEvents : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerAnimationEvents : MonoBehaviour
        player = GetComponentInParent<Player>();
     }
 
+    public void DamageEnemies() => player.DamageEnemies();
     private void DisableMovementAndJump() => player.EnableMovementAndJump(false);
     
 
