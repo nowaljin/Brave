@@ -2,11 +2,25 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private SpriteRenderer sr;
+
+    private float redColourDuration = 1;
+
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+    }
+
     public void TakeDamage()
     {
 
-        Debug.Log(gameObject.name + "damage");
+        sr.color = Color.red;
+        Invoke(nameof(TurnWhite), redColourDuration);
 
+    }
+
+    private void TurnWhite()
+    { 
+        sr.color = Color.white;
     }
 }
