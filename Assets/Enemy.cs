@@ -4,18 +4,41 @@ public class Enemy : MonoBehaviour
 {
     private SpriteRenderer sr;
 
-    private float redColourDuration = 1;
+    [SerializeField] private float redColorDuration = 1;
+
+    public float currentTimeInGame;
+    public float lastTimeWasDamaged;
+
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
     }
 
+    private void Update()
+    {
+        ChanceColorIfNeeded();
+
+    }
+
+    private void ChanceColorIfNeeded()
+    {
+        currentTimeInGame = Time.time;
+
+        if (currentTimeInGame > lastTimeWasDamaged + redColorDuration)
+        {
+            if (sr.color != Color.white)
+                sr.color = Color.white;
+        }
+    }
+
+
     public void TakeDamage()
     {
 
         sr.color = Color.red;
-        Invoke(nameof(TurnWhite), redColourDuration);
+        lastTimeWasDamaged = Time.time;
+        
 
     }
 

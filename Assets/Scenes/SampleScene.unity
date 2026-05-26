@@ -371,14 +371,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb38920ad090664eb456ef4d3530131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliders:
-  - {fileID: 0}
-  - {fileID: 0}
-  attackRadius: 0
-  attackPoint: {fileID: 0}
+  attackRadius: 0.8
+  attackPoint: {fileID: 1508365931}
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   moveSpeed: 8
   jumpForce: 12
   groundCheckDistance: 3.72
@@ -421,11 +418,12 @@ Transform:
   m_GameObject: {fileID: 676931259}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.46, y: 2.16, z: 0}
+  m_LocalPosition: {x: -1.27, y: -2.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1150610463}
+  - {fileID: 1508365931}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &676931265
@@ -912,6 +910,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1508365930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1508365931}
+  m_Layer: 0
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1508365931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508365930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.26, y: -2.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 676931264}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1874056198
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,7 +953,7 @@ GameObject:
   - component: {fileID: 1874056200}
   - component: {fileID: 1874056199}
   - component: {fileID: 1874056202}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -943,6 +972,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218a1833a1b07a74e88c157969dd61cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  redColorDuration: 2
+  currentTimeInGame: 0
+  lastTimeWasDamaged: 0
 --- !u!212 &1874056200
 SpriteRenderer:
   m_ObjectHideFlags: 0
