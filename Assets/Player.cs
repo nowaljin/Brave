@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
         foreach (Collider2D enemy in enemyColliders)
         {
-            enemy.GetComponent<Enemy>().TakeDamage();
+            enemy.GetComponent<Cooldown_Example>().TakeDamage();
         }
 
     }
