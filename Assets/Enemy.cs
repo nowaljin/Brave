@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float moveSpeed;
-    public string enemyName;
+    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected string enemyName;
 
 
     private void Update()
