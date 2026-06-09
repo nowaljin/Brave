@@ -7,12 +7,20 @@ public class Enemy_Goblin : Enemy
         moveSpeed = 10;
     }
 
+    protected override void Attack()
+    {
+        base.Attack();
+
+        StealMoney();
+
+    }
 
 
-    [ContextMenu ("Steal gold!")]
     private void StealMoney()
     {
         Debug.Log(enemyName + " steal's gold from player");
     }
+
+ 
 
 }
