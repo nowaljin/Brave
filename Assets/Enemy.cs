@@ -29,5 +29,10 @@ public class Enemy : MonoBehaviour
 
     }
 
+    public string GetEnemyName()
+    {
+        return enemyName;
+    }
+
 
 }
