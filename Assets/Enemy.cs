@@ -3,12 +3,13 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] protected string enemyName;
+
     [SerializeField] protected float moveSpeed;
 
 
     private void Update()
     {
-        MoveAround();
+       // MoveAround();
 
         if (Input.GetKeyDown(KeyCode.F))
             Attack();
