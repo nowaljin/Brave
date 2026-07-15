@@ -525,6 +525,11 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 128
+  hitEffectPrefab: {fileID: 7886844376257823993, guid: ed7d8cf000a0d284783631e7537fd398, type: 3}
+  arrowPrefab: {fileID: 5802615006545202643, guid: 0914a66c892d1154b850b39be99ebd95, type: 3}
+  arrowSpawnPoint: {fileID: 676931264}
+  arrowSpeed: 91.9
+  arrowOffset: {x: -1.27, y: -2.98}
   moveSpeed: 8
   jumpForce: 12
   groundCheckDistance: 3.72

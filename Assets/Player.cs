@@ -1,19 +1,22 @@
 using System.Collections.Generic;
-using UnityEngine;
+rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
 public class Player : MonoBehaviour
 {
     private Animator anim;
-    private Rigidbody2D rb;
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
-    
-    
     [Header("Attack details")]
     [SerializeField] private float attackRadius;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask whatIsEnemy;
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
-
+    [Header("Ranged Attack")]
+    [SerializeField] private GameObject arrowPrefab;
+    [SerializeField] private Transform arrowSpawnPoint;
+    [SerializeField] private float arrowSpeed = 10f;
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     [Header("Movement details")]
     [SerializeField] private float moveSpeed = 3.5f;
@@ -21,22 +24,18 @@ public class Player : MonoBehaviour
     private float xInput;
     private bool facingRight = true;
     private bool canMove = true;
-    private bool canJump= true;
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     [Header("Collision details")]
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask whatIsGrounded;
-    private bool isGrounded;
-    
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
-
-
-
-    }
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     private void Update()
     {
@@ -45,107 +44,98 @@ public class Player : MonoBehaviour
         HandleMovement();
         HandleAnimations();
         HandleFlip();
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
+    private void HandleInput()
+    {
+        xInput = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.Space)) TryToJump();
+        if (Input.GetKeyDown(KeyCode.Mouse0)) TryToAttack();
+        if (Input.GetKeyDown(KeyCode.Mouse1)) TryToShoot();
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
-    }
+    private void TryToAttack()
+    {
+        if (isGrounded) anim.SetTrigger("attack");
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
+
+    private void TryToShoot()
+    {
+        if (arrowPrefab != null && arrowSpawnPoint != null)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
+            Vector2 shootDirection = (mousePos - arrowSpawnPoint.position).normalized;
+            rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
+
+            GameObject arrow = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
+            float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
+            rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
+
+            Rigidbody2D rbArrow = arrow.GetComponent<Rigidbody2D>();
+            if (rbArrow != null)
+            {
+                rbArrow.bodyType = RigidbodyType2D.Dynamic;
+                rbArrow.gravityScale = 0;
+                rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
+
+            Destroy(arrow, 5f);
+        }
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
+
     public void DamageEnemies()
     {
-       Collider2D[] enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position,attackRadius,whatIsEnemy);
-
+        Collider2D[] enemyColliders = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius, whatIsEnemy);
         foreach (Collider2D enemy in enemyColliders)
         {
-            Enemy enemyScrpit = enemy.GetComponent<Enemy>();
-
-            enemyScrpit.TakeDamage();
-
-            string enemyName = enemyScrpit.GetEnemyName() ;
-            Debug.Log("I Damaged enemy : " + enemyName);
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage();
+                if (hitEffectPrefab != null) Instantiate(hitEffectPrefab, enemy.transform.position, Quaternion.identity);
+            }
         }
-
-    }
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     public void EnableMovementAndJump(bool enable)
-    { 
-        canMove  = enable;
+    {
+        canMove = enable;
         canJump = enable;
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
-    
-    }
+    private void TryToJump()
+    {
+        if (isGrounded && canJump) rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
+    private void HandleMovement()
+    {
+        rb.linearVelocity = new Vector2(canMove ? xInput * moveSpeed : 0, rb.linearVelocity.y);
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     private void HandleAnimations()
     {
         anim.SetFloat("xVelocity", rb.linearVelocity.x);
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
         anim.SetBool("isGrounded", isGrounded);
-
-    }
-
-    private void HandleInput()
-    {
-        xInput = Input.GetAxisRaw("Horizontal");
-
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            TryToJump();
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        
-            TryToAttack();
-        
-
-    }
-    private void TryToAttack()
-    {
-        if (isGrounded)
-            anim.SetTrigger("attack");
-      
-        
-    }
-
-  
-
-    private void TryToJump()
-    {
-        if (isGrounded && canJump)
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-    }
-
-    private void HandleMovement()
-    {
-        if(canMove)
-            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
-        else
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-    }
-
-    private void HandleCollision()
-    {
-
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGrounded);
-    }
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     private void HandleFlip()
     {
-        if (rb.linearVelocity.x > 0 && facingRight == false)
-            Flip();
-        else if (rb.linearVelocity.x < 0 && facingRight == true)
-            Flip();
-    }
+        if ((rb.linearVelocity.x > 0 && !facingRight) || (rb.linearVelocity.x < 0 && facingRight)) Flip();
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
     private void Flip()
     {
         transform.Rotate(0, 180, 0);
         facingRight = !facingRight;
-    }
+    rbArrow.linearVelocity = shootDirection * arrowSpeed * arrowSpeedMultiplier;
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
+        if (arrowSpawnPoint != null) { Gizmos.color = Color.red; Gizmos.DrawSphere(arrowSpawnPoint.position, 0.2f); }
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
     }
-
 }
-
-
