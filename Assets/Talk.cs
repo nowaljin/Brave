@@ -2,46 +2,37 @@ using UnityEngine;
 
 public class Talk : MonoBehaviour
 {
-    [Header("Konuşma Ayarları")]
-    [SerializeField] private string npcName = "Hermes";
+    [Header("Referanslar")]
+    public DialogueManager dialogueManager; 
+    
+    [Header("Diyaloglar")]
+    [TextArea(3, 10)]
+    public string[] sentences; 
 
-    public bool isPlayerInRange = false;
+    private bool isPlayerInRange = false;
 
     private void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            StartConversation();
+            if (dialogueManager != null)
+            {
+                dialogueManager.StartDialogue(sentences);
+            }
+            else
+            {
+                Debug.LogError("Talk script'indeki 'Dialogue Manager' kutusu boş! Lütfen o objeyi sürükleyip oraya bırak.");
+            }
         }
     }
 
-    private void StartConversation()
-    {
-        Debug.Log($"[{npcName}] ile konuşma başlatıldı!");
-        // Oyun içi konuşma UI'sı burada tetiklenebilir.
+    private void OnTriggerEnter2D(Collider2D other) 
+    { 
+        if (other.CompareTag("Player")) isPlayerInRange = true; 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = true;
-            Debug.Log($"[{npcName}]'nin yanına geldin. E tuşuna bas.");
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = false;
-            Debug.Log($"[{npcName}]'nin yanından uzaklaştın.");
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 1.5f);
+    private void OnTriggerExit2D(Collider2D other) 
+    { 
+        if (other.CompareTag("Player")) isPlayerInRange = false; 
     }
 }
