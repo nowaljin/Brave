@@ -5,10 +5,6 @@ public class Talk : MonoBehaviour
     [Header("Referanslar")]
     public DialogueManager dialogueManager; 
     
-    [Header("Diyaloglar")]
-    [TextArea(3, 10)]
-    public string[] sentences; 
-
     private bool isPlayerInRange = false;
 
     private void Update()
@@ -17,11 +13,11 @@ public class Talk : MonoBehaviour
         {
             if (dialogueManager != null)
             {
-                dialogueManager.StartDialogue(sentences);
+                dialogueManager.StartConversation();
             }
             else
             {
-                Debug.LogError("Talk script'indeki 'Dialogue Manager' kutusu boş! Lütfen o objeyi sürükleyip oraya bırak.");
+                Debug.LogError("Talk script'indeki 'Dialogue Manager' kutusu boş!");
             }
         }
     }

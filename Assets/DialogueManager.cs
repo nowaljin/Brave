@@ -5,38 +5,30 @@ public class DialogueManager : MonoBehaviour
 {
     [Header("UI Referansları")]
     public GameObject dialoguePanel;
-    public TextMeshProUGUI dialogueText;
-
-    private string[] currentSentences;
-    private int index;
+    public TMP_InputField chatInput;
+    public TextMeshProUGUI chatLog;
 
     private void Start()
     {
-        // Başlangıçta paneli kapalı tut
         if (dialoguePanel != null) dialoguePanel.SetActive(false);
     }
 
-    // Bu metod NPC'den (Talk.cs üzerinden) çağrılacak
-    public void StartDialogue(string[] sentences)
+    public void StartConversation()
     {
-        currentSentences = sentences;
-        index = 0;
         dialoguePanel.SetActive(true);
-        dialogueText.text = currentSentences[index];
+        chatInput.ActivateInputField();
     }
 
-    // Oyuncu bir tuşa bastığında (örn: Space) metinler arası geçiş yapacak
-    public void NextSentence()
+    public void OnSubmit(string message)
     {
-        if (index < currentSentences.Length - 1)
-        {
-            index++;
-            dialogueText.text = currentSentences[index];
-        }
-        else
-        {
-            // Diyalog bittiğinde paneli kapat
-            dialoguePanel.SetActive(false);
-        }
+        if (string.IsNullOrEmpty(message)) return;
+
+        // Konsola yaz ki ben buradan görebileyim
+        Debug.Log("MESSAGE_TO_HERMES: " + message);
+        
+        chatLog.text += "\nİlker: " + message;
+        
+        chatInput.text = "";
+        chatInput.ActivateInputField();
     }
 }
