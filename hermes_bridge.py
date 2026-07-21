@@ -2,9 +2,14 @@ import http.server
 import socketserver
 import urllib.parse
 import sys
+import threading
 
-# Mesaj depolama
-messages = []
+# Mesajları ve yanıtları tutan paylaşımlı hafıza
+class HermesState:
+    last_msg = ""
+    last_reply = "WAIT"
+
+state = HermesState()
 
 class HermesBridge(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
@@ -15,12 +20,7 @@ class HermesBridge(http.server.SimpleHTTPRequestHandler):
         
         print(f"\n[UNITY -> HERMES]: {msg}")
         sys.stdout.flush()
-        
-        # Bu mesajı konsola veya bir dosyaya yazabiliriz
-        with open("C:/Users/student/Desktop/BozkurtIlker/Unity/Brave/messages.txt", "a", encoding="utf-8") as f:
-            f.write(f"USER: {msg}\n")
-            
-        messages.append(msg)
+        state.last_msg = msg
         
         self.send_response(200)
         self.end_headers()
@@ -31,29 +31,22 @@ class HermesBridge(http.server.SimpleHTTPRequestHandler):
         self.send_header('Content-type', 'text/plain; charset=utf-8')
         self.end_headers()
         
-        # Dosyadan yanıt var mı kontrol et
-        try:
-            with open("C:/Users/student/Desktop/BozkurtIlker/Unity/Brave/reply.txt", "r", encoding="utf-8") as f:
-                reply = f.read().strip()
-            if reply:
-                self.wfile.write(reply.encode('utf-8'))
-                # Gönderildikten sonra dosyayı temizle
-                with open("C:/Users/student/Desktop/BozkurtIlker/Unity/Brave/reply.txt", "w", encoding="utf-8") as f:
-                    f.write("")
-                return
-        except FileNotFoundError:
-            pass
-            
-        self.wfile.write(b"WAIT")
+        # Hafızadaki yanıtı gönder
+        self.wfile.write(state.last_reply.encode('utf-8'))
+        # Gönderdikten sonra yanıtı sıfırla
+        state.last_reply = "WAIT"
+
+def run_server():
+    socketserver.TCPServer.allow_reuse_address = True
+    with socketserver.TCPServer(("", 8080), HermesBridge) as httpd:
+        print("Hermes Bridge çalışıyor: http://localhost:8080")
+        sys.stdout.flush()
+        httpd.serve_forever()
 
 if __name__ == "__main__":
-    # Portu bırakmak için
-    socketserver.TCPServer.allow_reuse_address = True
-    try:
-        with socketserver.TCPServer(("", 8080), HermesBridge) as httpd:
-            print("Hermes Bridge çalışıyor: http://localhost:8080")
-            sys.stdout.flush()
-            httpd.serve_forever()
-    except Exception as e:
-        print(f"HATA OLUŞTU: {e}")
-        sys.stdout.flush()
+    threading.Thread(target=run_server, daemon=True).start()
+    
+    # Konsoldan sana yanıt yazabilmen için bir döngü
+    while True:
+        reply = input("Hermes Yanıtı: ")
+        state.last_reply = reply

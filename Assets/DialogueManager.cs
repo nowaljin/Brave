@@ -46,14 +46,14 @@ public class DialogueManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.5f);
             using (UnityWebRequest www = UnityWebRequest.Get(bridgeUrl))
             {
                 yield return www.SendWebRequest();
                 if (www.result == UnityWebRequest.Result.Success)
                 {
                     string response = www.downloadHandler.text;
-                    if (response != "WAIT")
+                    if (!string.IsNullOrEmpty(response) && response != "WAIT")
                     {
                         chatLog.text += "\n<color=yellow>Hermes: </color>" + response;
                     }
