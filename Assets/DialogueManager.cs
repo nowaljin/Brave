@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using TMPro;
+using System.Collections;
 
 public class DialogueManager : MonoBehaviour
 {
-    [Header("UI Referansları")]
     public GameObject dialoguePanel;
     public TMP_InputField chatInput;
     public TextMeshProUGUI chatLog;
 
+    private string bridgeUrl = "http://localhost:8080";
+
     private void Start()
     {
         if (dialoguePanel != null) dialoguePanel.SetActive(false);
+        StartCoroutine(ListenForHermes());
     }
 
     public void StartConversation()
@@ -21,14 +25,40 @@ public class DialogueManager : MonoBehaviour
 
     public void OnSubmit(string message)
     {
-        if (string.IsNullOrEmpty(message)) return;
-
-        // Konsola yaz ki ben buradan görebileyim
-        Debug.Log("MESSAGE_TO_HERMES: " + message);
-        
+        if (string.IsNullOrWhiteSpace(message)) return;
         chatLog.text += "\nİlker: " + message;
-        
+        StartCoroutine(SendToHermes(message));
         chatInput.text = "";
         chatInput.ActivateInputField();
+    }
+
+    IEnumerator SendToHermes(string message)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("msg", message);
+        using (UnityWebRequest www = UnityWebRequest.Post(bridgeUrl, form))
+        {
+            yield return www.SendWebRequest();
+        }
+    }
+
+    IEnumerator ListenForHermes()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(2.0f);
+            using (UnityWebRequest www = UnityWebRequest.Get(bridgeUrl))
+            {
+                yield return www.SendWebRequest();
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    string response = www.downloadHandler.text;
+                    if (response != "WAIT")
+                    {
+                        chatLog.text += "\n<color=yellow>Hermes: </color>" + response;
+                    }
+                }
+            }
+        }
     }
 }
